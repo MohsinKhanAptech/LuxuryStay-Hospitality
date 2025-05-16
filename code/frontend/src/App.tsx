@@ -1,7 +1,9 @@
+import DashboardPage from './app/dashboard/dashboard-page';
+
 function App() {
   return (
     <>
-      <h1>hello world!</h1>
+      <DashboardPage />
     </>
   );
 }
