@@ -1,7 +1,6 @@
 import { Outlet } from 'react-router';
 
 import { AppSidebar } from '@/components/app-sidebar';
-import { SiteHeader } from '@/components/site-header';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 
 function AdminLayout() {
@@ -9,8 +8,7 @@ function AdminLayout() {
     <SidebarProvider>
       <AppSidebar variant='inset' />
       <SidebarInset>
-        <SiteHeader />
-        <Outlet/>
+        <Outlet />
       </SidebarInset>
     </SidebarProvider>
   );
