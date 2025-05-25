@@ -40,17 +40,17 @@ const data = {
   navMain: [
     {
       title: 'Dashboard',
-      url: '#',
+      url: '/admin',
       icon: IconDashboard,
     },
     {
-      title: 'Lifecycle',
-      url: '#',
+      title: 'User List',
+      url: '/admin/user/list',
       icon: IconListDetails,
     },
     {
-      title: 'Analytics',
-      url: '#',
+      title: 'User Add',
+      url: '/admin/user/add',
       icon: IconChartBar,
     },
     {
