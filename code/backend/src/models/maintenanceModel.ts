@@ -1,16 +1,25 @@
 import mongoose from 'mongoose';
 
-const maintenanceSchema = new mongoose.Schema({
-  roomId: { type: mongoose.Schema.Types.ObjectId, ref: 'Room', required: true },
-  requestDetails: { type: String, required: true },
-  status: {
-    type: String,
-    enum: ['reported', 'assigned', 'in progress', 'completed'],
-    required: true,
+const maintenanceSchema = new mongoose.Schema(
+  {
+    roomId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Room',
+      required: true,
+    },
+    requestDetails: { type: String, required: true },
+    status: {
+      type: String,
+      enum: ['reported', 'assigned', 'in progress', 'completed'],
+      required: true,
+    },
+    reportedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   },
-  reportedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-});
+  {
+    timestamps: true,
+  }
+);
 
 const Maintenance = mongoose.model('Maintenance', maintenanceSchema);
 
