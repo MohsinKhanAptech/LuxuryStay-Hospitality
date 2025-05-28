@@ -3,6 +3,15 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 
+import roomRoutes from './routes/roomRoutes';
+import userRoutes from './routes/userRoutes';
+import billRoutes from './routes/billRoutes';
+import bookingRoutes from './routes/bookingRoutes';
+import feedbackRoutes from './routes/feedbackRoutes';
+import maintenanceRoutes from './routes/maintenanceRoutes';
+import housekeepingRoutes from './routes/housekeepingRoutes';
+import systemSettingsRoutes from './routes/systemSettingsRoutes';
+
 dotenv.config();
 const app = express();
 app.use(cors());
@@ -23,6 +32,16 @@ mongoose
     console.error('MongoDB connection error:', err);
   });
 //
+
+// Routes
+app.use('/api/users', userRoutes);
+app.use('/api/rooms', roomRoutes);
+app.use('/api/bills', billRoutes);
+app.use('/api/bookings', bookingRoutes);
+app.use('/api/feedback', feedbackRoutes);
+app.use('/api/maintenance', maintenanceRoutes);
+app.use('/api/housekeeping', housekeepingRoutes);
+app.use('/api/system-settings', systemSettingsRoutes);
 
 app.listen(PORT, () => {
   console.log(
