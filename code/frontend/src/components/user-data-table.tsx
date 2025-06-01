@@ -43,6 +43,7 @@ import {
   IconLayoutColumns,
   IconPlus,
 } from '@tabler/icons-react';
+import { Link } from 'react-router';
 
 export const userSchema = z.object({
   _id: z.string(),
@@ -146,7 +147,6 @@ const columns: ColumnDef<z.infer<typeof userSchema>>[] = [
         <DropdownMenuContent align='end' className='w-32'>
           <DropdownMenuItem>Edit</DropdownMenuItem>
           <DropdownMenuItem>Make a copy</DropdownMenuItem>
-          <DropdownMenuItem>Favorite</DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem variant='destructive'>Delete</DropdownMenuItem>
         </DropdownMenuContent>
@@ -202,7 +202,9 @@ export function UserDataTable({
           View
         </Label>
         <TabsList>
-          <TabsTrigger value='users'>Users</TabsTrigger>
+          <TabsTrigger value='all-users'>All Users</TabsTrigger>
+          <TabsTrigger value='guests'>Guests</TabsTrigger>
+          <TabsTrigger value='housekeeping'>Housekeeping</TabsTrigger>
         </TabsList>
         <div className='flex items-center gap-2'>
           <DropdownMenu>
@@ -238,9 +240,11 @@ export function UserDataTable({
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button variant='outline' size='sm'>
-            <IconPlus />
-            <span className='hidden lg:inline'>Add User</span>
+          <Button variant='outline' size='sm' asChild>
+            <Link to={'/admin/user/add'}>
+              <IconPlus />
+              <span className='hidden lg:inline'>Add User</span>
+            </Link>
           </Button>
         </div>
       </div>

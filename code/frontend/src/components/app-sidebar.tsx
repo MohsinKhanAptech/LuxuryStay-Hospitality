@@ -10,7 +10,6 @@ import {
   IconFolder,
   IconHelp,
   IconInnerShadowTop,
-  IconListDetails,
   IconReport,
   IconSearch,
   IconSettings,
@@ -44,13 +43,13 @@ const data = {
       icon: IconDashboard,
     },
     {
-      title: 'User List',
+      title: 'Users',
       url: '/admin/user/list',
-      icon: IconListDetails,
+      icon: IconUsers,
     },
     {
-      title: 'User Add',
-      url: '/admin/user/add',
+      title: 'Projects',
+      url: '#',
       icon: IconChartBar,
     },
     {
