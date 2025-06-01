@@ -27,6 +27,7 @@ const router = createBrowserRouter([
           { path: 'add', Component: UserAdd },
         ],
       },
+      { path: 'users', Component: UserList },
     ],
   },
 ]);
