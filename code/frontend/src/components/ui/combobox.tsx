@@ -22,9 +22,13 @@ import {
 export function Combobox({
   items,
   className,
+  startValue,
+  onChange,
 }: {
   items: { value: string; label: string }[];
   className?: string;
+  startValue?: string;
+  onChange?: Function;
 }) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState('');
@@ -33,20 +37,24 @@ export function Combobox({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant='outline'
-          role='combobox'
+          variant="outline"
+          role="combobox"
           aria-expanded={open}
           className={cn('w-[200px] justify-between', className)}
         >
           {items && value
             ? items.find((item) => item.value === value)?.label
             : 'Select item...'}
-          <ChevronsUpDownIcon className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+          <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className='w-[200px] p-0'>
+      <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder='Search item...' />
+          <CommandInput
+            value={startValue}
+            onChange={onChange}
+            placeholder="Search item..."
+          />
           <CommandList>
             <CommandEmpty>No item found.</CommandEmpty>
             <CommandGroup>
@@ -54,7 +62,7 @@ export function Combobox({
                 <CommandItem
                   key={item.value}
                   value={item.value}
-                  onSelect={(currentValue) => {
+                  onSelect={(currentValue: any) => {
                     setValue(currentValue === value ? '' : currentValue);
                     setOpen(false);
                   }}
