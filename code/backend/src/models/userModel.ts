@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema(
       address: { type: String },
     },
     password: { type: String, required: true },
-    accessLevel: { type: Number },
+    accessLevel: { type: Number, required: true, default: 0 },
     isActive: { type: Boolean, default: true },
     preferences: {
       roomType: { type: String },
