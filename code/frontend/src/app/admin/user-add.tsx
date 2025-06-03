@@ -1,34 +1,36 @@
-import { useState } from 'react';
-import { Link, redirect } from 'react-router';
-import axios from 'axios';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router";
+import axios from "axios";
 
-import { SiteHeader } from '@/components/site-header';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Combobox } from '@/components/ui/combobox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { SiteHeader } from "@/components/site-header";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Combobox } from "@/components/ui/combobox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const UserAdd = () => {
   const [form, setForm] = useState({
-    firstname: '',
-    lastname: '',
-    email: '',
-    phone: '',
-    address: '',
-    userType: '',
-    accessLevel: '',
-    password: '',
-    roomType: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    address: "",
+    userType: "",
+    accessLevel: "",
+    password: "",
+    roomType: "",
     isActive: true,
     smoking: false,
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value, type, checked } = e.target;
     setForm((prev) => ({
       ...prev,
-      [id]: type === 'checkbox' ? checked : value,
+      [id]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -42,37 +44,55 @@ const UserAdd = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/users/', form);
-      return redirect('/admin/user/list');
+      const formData = {
+        userType: form.userType,
+        personalInfo: {
+          firstName: form.firstName,
+          lastName: form.lastName,
+          email: form.email,
+          phone: form.phone,
+          address: form.address,
+        },
+        password: form.password,
+        isActive: form.isActive,
+        preferences: {
+          roomType: form.roomType,
+          smoking: form.smoking,
+        },
+      };
+      console.log(formData);
+      await axios.post("http://localhost:5000/api/users/", formData);
+      navigate("/admin/user");
       // Optionally redirect or show success message
     } catch (err: any) {
       // Handle error
+      console.log(err);
     }
   };
   return (
     <>
-      <SiteHeader title={'User Add'} />
+      <SiteHeader title={"User Add"} />
       <section>
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col gap-6 p-10">
             <div className="flex gap-4">
               <div className="grid w-full items-center gap-1.5">
-                <Label htmlFor="firstname">First Name</Label>
+                <Label htmlFor="firstName">First Name</Label>
                 <Input
                   type="text"
-                  id="firstname"
+                  id="firstName"
                   placeholder="First Name"
-                  value={form.firstname}
+                  value={form.firstName}
                   onChange={handleChange}
                 />
               </div>
               <div className="grid w-full items-center gap-1.5">
-                <Label htmlFor="lastname">Last Name</Label>
+                <Label htmlFor="lastName">Last Name</Label>
                 <Input
                   type="text"
-                  id="lastname"
+                  id="lastName"
                   placeholder="Last Name"
-                  value={form.lastname}
+                  value={form.lastName}
                   onChange={handleChange}
                 />
               </div>
@@ -113,11 +133,11 @@ const UserAdd = () => {
                 <Combobox
                   className="w-full"
                   items={[
-                    { value: 'admin', label: 'Admin' },
-                    { value: 'manager', label: 'Manager' },
-                    { value: 'receptionist', label: 'Receptionist' },
-                    { value: 'housekeeping', label: 'Housekeeping' },
-                    { value: 'guest', label: 'Guest' },
+                    { value: "admin", label: "Admin" },
+                    { value: "manager", label: "Manager" },
+                    { value: "receptionist", label: "Receptionist" },
+                    { value: "housekeeping", label: "Housekeeping" },
+                    { value: "guest", label: "Guest" },
                   ]}
                   startValue={form.userType}
                   onChange={handleUserTypeChange}
@@ -182,8 +202,13 @@ const UserAdd = () => {
             <Button className="w-full" type="submit">
               Submit
             </Button>
-            <Button variant={'outline'} className="w-full" asChild>
-              <Link to={'/admin/user/list'}>Back</Link>
+            <Button
+              variant={"outline"}
+              type="button"
+              className="w-full"
+              asChild
+            >
+              <Link to={"/admin/user/list"}>Back</Link>
             </Button>
           </div>
         </form>

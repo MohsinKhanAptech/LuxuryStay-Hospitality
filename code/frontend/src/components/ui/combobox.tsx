@@ -31,7 +31,7 @@ export function Combobox({
   onChange?: Function;
 }) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState('');
+  const [value, setValue] = React.useState(startValue || '');
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -51,8 +51,6 @@ export function Combobox({
       <PopoverContent className="w-[200px] p-0">
         <Command>
           <CommandInput
-            value={startValue}
-            onChange={onChange}
             placeholder="Search item..."
           />
           <CommandList>
@@ -64,6 +62,7 @@ export function Combobox({
                   value={item.value}
                   onSelect={(currentValue: any) => {
                     setValue(currentValue === value ? '' : currentValue);
+                    if (onChange) onChange(currentValue);
                     setOpen(false);
                   }}
                 >
