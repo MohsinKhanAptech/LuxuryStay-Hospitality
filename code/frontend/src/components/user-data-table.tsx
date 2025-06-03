@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -10,11 +10,11 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from '@tanstack/react-table';
-import { z } from 'zod';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+} from "@tanstack/react-table";
+import { z } from "zod";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -22,9 +22,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Label } from '@/components/ui/label';
+} from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Label } from "@/components/ui/label";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -32,7 +32,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
 import {
   IconChevronDown,
   IconChevronLeft,
@@ -42,8 +42,9 @@ import {
   IconDotsVertical,
   IconLayoutColumns,
   IconPlus,
-} from '@tabler/icons-react';
-import { Link } from 'react-router';
+} from "@tabler/icons-react";
+import { Link } from "react-router";
+import axios from "axios";
 
 export const userSchema = z.object({
   _id: z.string(),
@@ -61,25 +62,25 @@ export const userSchema = z.object({
 
 const columns: ColumnDef<z.infer<typeof userSchema>>[] = [
   {
-    id: 'select',
+    id: "select",
     header: ({ table }) => (
-      <div className='flex items-center justify-center'>
+      <div className="flex items-center justify-center">
         <Checkbox
           checked={
             table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && 'indeterminate')
+            (table.getIsSomePageRowsSelected() && "indeterminate")
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label='Select all'
+          aria-label="Select all"
         />
       </div>
     ),
     cell: ({ row }) => (
-      <div className='flex items-center justify-center'>
+      <div className="flex items-center justify-center">
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label='Select row'
+          aria-label="Select row"
         />
       </div>
     ),
@@ -87,68 +88,68 @@ const columns: ColumnDef<z.infer<typeof userSchema>>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'userType',
-    header: 'User Type',
+    accessorKey: "userType",
+    header: "User Type",
     cell: ({ row }) => (
-      <Badge variant='outline' className='text-muted-foreground px-1.5'>
+      <Badge variant="outline" className="text-muted-foreground px-1.5">
         {row.original.userType}
       </Badge>
     ),
   },
   {
-    accessorKey: 'personalInfo.firstName',
-    header: 'First Name',
+    accessorKey: "personalInfo.firstName",
+    header: "First Name",
     cell: ({ row }) => row.original.personalInfo.firstName,
   },
   {
-    accessorKey: 'personalInfo.lastName',
-    header: 'Last Name',
+    accessorKey: "personalInfo.lastName",
+    header: "Last Name",
     cell: ({ row }) => row.original.personalInfo.lastName,
   },
   {
-    accessorKey: 'personalInfo.email',
-    header: 'Email',
+    accessorKey: "personalInfo.email",
+    header: "Email",
     cell: ({ row }) => row.original.personalInfo.email,
   },
   {
-    accessorKey: 'personalInfo.phone',
-    header: 'Phone',
+    accessorKey: "personalInfo.phone",
+    header: "Phone",
     cell: ({ row }) => row.original.personalInfo.phone,
   },
   {
-    accessorKey: 'isActive',
-    header: 'Active',
+    accessorKey: "isActive",
+    header: "Active",
     cell: ({ row }) =>
       row.original.isActive ? (
-        <Badge variant='default'>Active</Badge>
+        <Badge variant="default">Active</Badge>
       ) : (
-        <Badge variant='secondary'>Inactive</Badge>
+        <Badge variant="secondary">Inactive</Badge>
       ),
   },
   {
-    accessorKey: 'createdAt',
-    header: 'Created At',
+    accessorKey: "createdAt",
+    header: "Created At",
     cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
   },
   {
-    id: 'actions',
+    id: "actions",
     cell: () => (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            variant='ghost'
-            className='data-[state=open]:bg-muted text-muted-foreground flex size-8'
-            size='icon'
+            variant="ghost"
+            className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
+            size="icon"
           >
             <IconDotsVertical />
-            <span className='sr-only'>Open menu</span>
+            <span className="sr-only">Open menu</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align='end' className='w-32'>
+        <DropdownMenuContent align="end" className="w-32">
           <DropdownMenuItem>Edit</DropdownMenuItem>
           <DropdownMenuItem>Make a copy</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem variant='destructive'>Delete</DropdownMenuItem>
+          <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     ),
@@ -171,10 +172,58 @@ export function UserDataTable({
     pageIndex: 0,
     pageSize: 10,
   });
+  const [tableData, setTableData] = React.useState(data);
+
+  const columnsWithDelete = React.useMemo(() => {
+    // clone columns so we can inject setTableData
+    return columns.map((col) => {
+      if (col.id === "actions") {
+        return {
+          ...col,
+          cell: ({ row }: any) => (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
+                  size="icon"
+                >
+                  <IconDotsVertical />
+                  <span className="sr-only">Open menu</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-32">
+                <DropdownMenuItem>Edit</DropdownMenuItem>
+                <DropdownMenuItem>Make a copy</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => {
+                    axios
+                      .delete(
+                        `http://localhost:5000/api/users/${row.original._id}`
+                      )
+                      .then(() => {
+                        setTableData((prev: any) =>
+                          prev.filter((u: any) => u._id !== row.original._id)
+                        );
+                      });
+                  }}
+                  variant="destructive"
+                >
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ),
+        };
+      }
+      return col;
+    });
+  }, [setTableData]);
 
   const table = useReactTable({
-    data,
-    columns,
+    data: tableData,
+    columns: columnsWithDelete,
     state: {
       sorting,
       columnVisibility,
@@ -196,39 +245,39 @@ export function UserDataTable({
   });
 
   return (
-    <Tabs defaultValue='users' className='w-full flex-col justify-start gap-6'>
-      <div className='flex items-center justify-between px-4 lg:px-6'>
-        <Label htmlFor='view-selector' className='sr-only'>
+    <Tabs defaultValue="users" className="w-full flex-col justify-start gap-6">
+      <div className="flex items-center justify-between px-4 lg:px-6">
+        <Label htmlFor="view-selector" className="sr-only">
           View
         </Label>
         <TabsList>
-          <TabsTrigger value='all-users'>All Users</TabsTrigger>
-          <TabsTrigger value='guests'>Guests</TabsTrigger>
-          <TabsTrigger value='housekeeping'>Housekeeping</TabsTrigger>
+          <TabsTrigger value="all-users">All Users</TabsTrigger>
+          <TabsTrigger value="guests">Guests</TabsTrigger>
+          <TabsTrigger value="housekeeping">Housekeeping</TabsTrigger>
         </TabsList>
-        <div className='flex items-center gap-2'>
+        <div className="flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant='outline' size='sm'>
+              <Button variant="outline" size="sm">
                 <IconLayoutColumns />
-                <span className='hidden lg:inline'>Customize Columns</span>
-                <span className='lg:hidden'>Columns</span>
+                <span className="hidden lg:inline">Customize Columns</span>
+                <span className="lg:hidden">Columns</span>
                 <IconChevronDown />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align='end' className='w-56'>
+            <DropdownMenuContent align="end" className="w-56">
               {table
                 .getAllColumns()
                 .filter(
                   (column) =>
-                    typeof column.accessorFn !== 'undefined' &&
+                    typeof column.accessorFn !== "undefined" &&
                     column.getCanHide()
                 )
                 .map((column) => {
                   return (
                     <DropdownMenuCheckboxItem
                       key={column.id}
-                      className='capitalize'
+                      className="capitalize"
                       checked={column.getIsVisible()}
                       onCheckedChange={(value) =>
                         column.toggleVisibility(!!value)
@@ -240,21 +289,21 @@ export function UserDataTable({
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button variant='outline' size='sm' asChild>
-            <Link to={'/admin/user/add'}>
+          <Button variant="outline" size="sm" asChild>
+            <Link to={"/admin/user/add"}>
               <IconPlus />
-              <span className='hidden lg:inline'>Add User</span>
+              <span className="hidden lg:inline">Add User</span>
             </Link>
           </Button>
         </div>
       </div>
       <TabsContent
-        value='users'
-        className='relative flex flex-col gap-4 overflow-auto px-4 lg:px-6'
+        value="users"
+        className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
       >
-        <div className='overflow-hidden rounded-lg border'>
+        <div className="overflow-hidden rounded-lg border">
           <Table>
-            <TableHeader className='bg-muted sticky top-0 z-10'>
+            <TableHeader className="bg-muted sticky top-0 z-10">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
@@ -277,7 +326,7 @@ export function UserDataTable({
                 table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
-                    data-state={row.getIsSelected() && 'selected'}
+                    data-state={row.getIsSelected() && "selected"}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
@@ -293,7 +342,7 @@ export function UserDataTable({
                 <TableRow>
                   <TableCell
                     colSpan={columns.length}
-                    className='h-24 text-center'
+                    className="h-24 text-center"
                   >
                     No results.
                   </TableCell>
@@ -302,21 +351,21 @@ export function UserDataTable({
             </TableBody>
           </Table>
         </div>
-        <div className='flex items-center justify-between px-4'>
-          <div className='text-muted-foreground hidden flex-1 text-sm lg:flex'>
-            {table.getFilteredSelectedRowModel().rows.length} of{' '}
+        <div className="flex items-center justify-between px-4">
+          <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
+            {table.getFilteredSelectedRowModel().rows.length} of{" "}
             {table.getFilteredRowModel().rows.length} row(s) selected.
           </div>
-          <div className='flex w-full items-center gap-8 lg:w-fit'>
-            <div className='hidden items-center gap-2 lg:flex'>
-              <Label htmlFor='rows-per-page' className='text-sm font-medium'>
+          <div className="flex w-full items-center gap-8 lg:w-fit">
+            <div className="hidden items-center gap-2 lg:flex">
+              <Label htmlFor="rows-per-page" className="text-sm font-medium">
                 Rows per page
               </Label>
               <select
                 value={table.getState().pagination.pageSize}
                 onChange={(e) => table.setPageSize(Number(e.target.value))}
-                className='w-20'
-                id='rows-per-page'
+                className="w-20"
+                id="rows-per-page"
               >
                 {[10, 20, 30, 40, 50].map((pageSize) => (
                   <option key={pageSize} value={pageSize}>
@@ -325,48 +374,48 @@ export function UserDataTable({
                 ))}
               </select>
             </div>
-            <div className='flex w-fit items-center justify-center text-sm font-medium'>
-              Page {table.getState().pagination.pageIndex + 1} of{' '}
+            <div className="flex w-fit items-center justify-center text-sm font-medium">
+              Page {table.getState().pagination.pageIndex + 1} of{" "}
               {table.getPageCount()}
             </div>
-            <div className='ml-auto flex items-center gap-2 lg:ml-0'>
+            <div className="ml-auto flex items-center gap-2 lg:ml-0">
               <Button
-                variant='outline'
-                className='hidden h-8 w-8 p-0 lg:flex'
+                variant="outline"
+                className="hidden h-8 w-8 p-0 lg:flex"
                 onClick={() => table.setPageIndex(0)}
                 disabled={!table.getCanPreviousPage()}
               >
-                <span className='sr-only'>Go to first page</span>
+                <span className="sr-only">Go to first page</span>
                 <IconChevronsLeft />
               </Button>
               <Button
-                variant='outline'
-                className='size-8'
-                size='icon'
+                variant="outline"
+                className="size-8"
+                size="icon"
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}
               >
-                <span className='sr-only'>Go to previous page</span>
+                <span className="sr-only">Go to previous page</span>
                 <IconChevronLeft />
               </Button>
               <Button
-                variant='outline'
-                className='size-8'
-                size='icon'
+                variant="outline"
+                className="size-8"
+                size="icon"
                 onClick={() => table.nextPage()}
                 disabled={!table.getCanNextPage()}
               >
-                <span className='sr-only'>Go to next page</span>
+                <span className="sr-only">Go to next page</span>
                 <IconChevronRight />
               </Button>
               <Button
-                variant='outline'
-                className='hidden size-8 lg:flex'
-                size='icon'
+                variant="outline"
+                className="hidden size-8 lg:flex"
+                size="icon"
                 onClick={() => table.setPageIndex(table.getPageCount() - 1)}
                 disabled={!table.getCanNextPage()}
               >
-                <span className='sr-only'>Go to last page</span>
+                <span className="sr-only">Go to last page</span>
                 <IconChevronsRight />
               </Button>
             </div>
