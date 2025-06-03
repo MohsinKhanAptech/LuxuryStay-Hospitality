@@ -217,4 +217,4 @@ const UserAdd = () => {
   );
 };
 
-export { UserAdd };
+export default UserAdd;
