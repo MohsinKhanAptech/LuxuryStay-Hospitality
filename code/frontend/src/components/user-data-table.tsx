@@ -60,102 +60,6 @@ export const userSchema = z.object({
   createdAt: z.string(),
 });
 
-const columns: ColumnDef<z.infer<typeof userSchema>>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <div className="flex items-center justify-center">
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className="flex items-center justify-center">
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      </div>
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "userType",
-    header: "User Type",
-    cell: ({ row }) => (
-      <Badge variant="outline" className="text-muted-foreground px-1.5">
-        {row.original.userType}
-      </Badge>
-    ),
-  },
-  {
-    accessorKey: "personalInfo.firstName",
-    header: "First Name",
-    cell: ({ row }) => row.original.personalInfo.firstName,
-  },
-  {
-    accessorKey: "personalInfo.lastName",
-    header: "Last Name",
-    cell: ({ row }) => row.original.personalInfo.lastName,
-  },
-  {
-    accessorKey: "personalInfo.email",
-    header: "Email",
-    cell: ({ row }) => row.original.personalInfo.email,
-  },
-  {
-    accessorKey: "personalInfo.phone",
-    header: "Phone",
-    cell: ({ row }) => row.original.personalInfo.phone,
-  },
-  {
-    accessorKey: "isActive",
-    header: "Active",
-    cell: ({ row }) =>
-      row.original.isActive ? (
-        <Badge variant="default">Active</Badge>
-      ) : (
-        <Badge variant="secondary">Inactive</Badge>
-      ),
-  },
-  {
-    accessorKey: "createdAt",
-    header: "Created At",
-    cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
-  },
-  {
-    id: "actions",
-    cell: () => (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
-            size="icon"
-          >
-            <IconDotsVertical />
-            <span className="sr-only">Open menu</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-32">
-          <DropdownMenuItem>Edit</DropdownMenuItem>
-          <DropdownMenuItem>Make a copy</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ),
-  },
-];
-
 export function UserDataTable({
   data,
 }: {
@@ -174,56 +78,127 @@ export function UserDataTable({
   });
   const [tableData, setTableData] = React.useState(data);
 
-  const columnsWithDelete = React.useMemo(() => {
-    // clone columns so we can inject setTableData
-    return columns.map((col) => {
-      if (col.id === "actions") {
-        return {
-          ...col,
-          cell: ({ row }: any) => (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
-                  size="icon"
-                >
-                  <IconDotsVertical />
-                  <span className="sr-only">Open menu</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-32">
-                <DropdownMenuItem>Edit</DropdownMenuItem>
-                <DropdownMenuItem>Make a copy</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => {
-                    axios
-                      .delete(
-                        `http://localhost:5000/api/users/${row.original._id}`
-                      )
-                      .then(() => {
-                        setTableData((prev: any) =>
-                          prev.filter((u: any) => u._id !== row.original._id)
-                        );
-                      });
-                  }}
-                  variant="destructive"
-                >
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ),
-        };
-      }
-      return col;
-    });
-  }, [setTableData]);
+  const columns: ColumnDef<z.infer<typeof userSchema>>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <div className="flex items-center justify-center">
+          <Checkbox
+            checked={
+              table.getIsAllPageRowsSelected() ||
+              (table.getIsSomePageRowsSelected() && "indeterminate")
+            }
+            onCheckedChange={(value) =>
+              table.toggleAllPageRowsSelected(!!value)
+            }
+            aria-label="Select all"
+          />
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div className="flex items-center justify-center">
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label="Select row"
+          />
+        </div>
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: "userType",
+      header: "User Type",
+      cell: ({ row }) => (
+        <Badge variant="outline" className="text-muted-foreground px-1.5">
+          {row.original.userType}
+        </Badge>
+      ),
+    },
+    {
+      accessorKey: "personalInfo.firstName",
+      header: "First Name",
+      cell: ({ row }) => row.original.personalInfo.firstName,
+    },
+    {
+      accessorKey: "personalInfo.lastName",
+      header: "Last Name",
+      cell: ({ row }) => row.original.personalInfo.lastName,
+    },
+    {
+      accessorKey: "personalInfo.email",
+      header: "Email",
+      cell: ({ row }) => row.original.personalInfo.email,
+    },
+    {
+      accessorKey: "personalInfo.phone",
+      header: "Phone",
+      cell: ({ row }) => row.original.personalInfo.phone,
+    },
+    {
+      accessorKey: "isActive",
+      header: "Active",
+      cell: ({ row }) =>
+        row.original.isActive ? (
+          <Badge variant="default">Active</Badge>
+        ) : (
+          <Badge variant="secondary">Inactive</Badge>
+        ),
+    },
+    {
+      accessorKey: "createdAt",
+      header: "Created At",
+      cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
+    },
+    {
+      id: "actions",
+      cell: ({ row }) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
+              size="icon"
+            >
+              <IconDotsVertical />
+              <span className="sr-only">Open menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-32">
+            <DropdownMenuItem asChild>
+              <Link
+                to={"/admin/user/edit"}
+                state={row.original._id}
+              >
+                Edit
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>Make a copy</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => {
+                axios
+                  .delete(`http://localhost:5000/api/users/${row.original._id}`)
+                  .then(() => {
+                    setTableData((prev: any) =>
+                      prev.filter((u: any) => u._id !== row.original._id)
+                    );
+                  });
+              }}
+              variant="destructive"
+            >
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
+    },
+  ];
 
   const table = useReactTable({
     data: tableData,
-    columns: columnsWithDelete,
+    columns,
     state: {
       sorting,
       columnVisibility,

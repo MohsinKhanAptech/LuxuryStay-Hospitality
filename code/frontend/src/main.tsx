@@ -7,6 +7,7 @@ import AdminLayout from './app/admin/admin-layout.tsx';
 import Dashboard from './app/admin/dashboard.tsx';
 import UserList from './app/admin/user-list.tsx';
 import UserAdd from './app/admin/user-add.tsx';
+import UserEdit from './app/admin/user-edit.tsx';
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
           { index: true, Component: UserList },
           { path: 'list', Component: UserList },
           { path: 'add', Component: UserAdd },
+          { path: 'edit', Component: UserEdit },
         ],
       },
       { path: 'users', Component: UserList },
