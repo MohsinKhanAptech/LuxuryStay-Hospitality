@@ -1,4 +1,6 @@
 import * as React from "react";
+import { Link } from "react-router";
+import axios from "axios";
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -12,6 +14,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { z } from "zod";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -43,8 +46,6 @@ import {
   IconLayoutColumns,
   IconPlus,
 } from "@tabler/icons-react";
-import { Link } from "react-router";
-import axios from "axios";
 
 export const userSchema = z.object({
   _id: z.string(),
@@ -167,22 +168,23 @@ export function UserDataTable({
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-32">
             <DropdownMenuItem asChild>
-              <Link
-                to={"/admin/user/edit"}
-                state={row.original._id}
-              >
+              <Link to={"/admin/user/detail"} state={row.original._id}>
+                View Details
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to={"/admin/user/edit"} state={row.original._id}>
                 Edit
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>Make a copy</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
                 axios
                   .delete(`http://localhost:5000/api/users/${row.original._id}`)
                   .then(() => {
-                    setTableData((prev: any) =>
-                      prev.filter((u: any) => u._id !== row.original._id)
+                    setTableData((prev) =>
+                      prev.filter((u) => u._id !== row.original._id)
                     );
                   });
               }}
