@@ -17,7 +17,7 @@ const UserAdd = () => {
     phone: "",
     address: "",
     userType: "",
-    accessLevel: "",
+    accessLevel: 0,
     password: "",
     roomType: "",
     isActive: true,
@@ -25,12 +25,19 @@ const UserAdd = () => {
   });
 
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value, type, checked } = e.target;
     setForm((prev) => ({
       ...prev,
-      [id]: type === "checkbox" ? checked : value,
+      [id]:
+        type === "checkbox"
+          ? checked
+          : id === "accessLevel"
+          ? Number(value)
+          : value,
     }));
   };
 
@@ -43,6 +50,9 @@ const UserAdd = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage(null);
+    setIsSubmitting(true);
+
     try {
       const formData = {
         userType: form.userType,
@@ -55,26 +65,45 @@ const UserAdd = () => {
         },
         password: form.password,
         isActive: form.isActive,
+        accessLevel: form.accessLevel,
         preferences: {
           roomType: form.roomType,
           smoking: form.smoking,
         },
       };
+
       console.log(formData);
       await axios.post("http://localhost:5000/api/users/", formData);
-      navigate("/admin/user");
-      // Optionally redirect or show success message
-    } catch (err: any) {
-      // Handle error
-      console.log(err);
+      navigate("/admin/user/list");
+    } catch (error) {
+      console.error("Error adding user:", error);
+      setErrorMessage(
+        "Failed to add user. Please check your input and try again."
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
   return (
     <>
       <SiteHeader title={"User Add"} />
-      <section>
-        <form onSubmit={handleSubmit}>
-          <div className="flex flex-col gap-6 p-10">
+      <section className="p-4 md:p-10">
+        <form onSubmit={handleSubmit} className="bg-white p-6">
+          <h2 className="text-2xl font-bold mb-6 text-gray-800">
+            Add New User
+          </h2>
+
+          {errorMessage && (
+            <div
+              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+              role="alert"
+            >
+              <span className="block sm:inline">{errorMessage}</span>
+            </div>
+          )}
+
+          <div className="flex flex-col gap-6">
             <div className="flex gap-4">
               <div className="grid w-full items-center gap-1.5">
                 <Label htmlFor="firstName">First Name</Label>
@@ -84,6 +113,7 @@ const UserAdd = () => {
                   placeholder="First Name"
                   value={form.firstName}
                   onChange={handleChange}
+                  required
                 />
               </div>
               <div className="grid w-full items-center gap-1.5">
@@ -94,6 +124,7 @@ const UserAdd = () => {
                   placeholder="Last Name"
                   value={form.lastName}
                   onChange={handleChange}
+                  required
                 />
               </div>
             </div>
@@ -105,6 +136,7 @@ const UserAdd = () => {
                 placeholder="Email"
                 value={form.email}
                 onChange={handleChange}
+                required
               />
             </div>
             <div className="grid w-full items-center gap-1.5">
@@ -152,6 +184,7 @@ const UserAdd = () => {
                   placeholder="Access Level"
                   value={form.accessLevel}
                   onChange={handleChange}
+                  min="0"
                 />
               </div>
             </div>
@@ -163,6 +196,7 @@ const UserAdd = () => {
                 placeholder="Password"
                 value={form.password}
                 onChange={handleChange}
+                required
               />
             </div>
             <div className="grid w-full items-center gap-1.5">
@@ -183,7 +217,7 @@ const UserAdd = () => {
                   onCheckedChange={(checked) =>
                     setForm((prev) => ({ ...prev, isActive: !!checked }))
                   }
-                  className="w-4 h-4"
+                  className="w-4 h-4 rounded"
                 />
                 <Label htmlFor="isActive">Is Active</Label>
               </div>
@@ -194,13 +228,17 @@ const UserAdd = () => {
                   onCheckedChange={(checked) =>
                     setForm((prev) => ({ ...prev, smoking: !!checked }))
                   }
-                  className="w-4 h-4"
+                  className="w-4 h-4 rounded"
                 />
                 <Label htmlFor="smoking">Client Smokes</Label>
               </div>
             </div>
-            <Button className="w-full" type="submit">
-              Submit
+            <Button
+              className="w-full mt-4"
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Adding User..." : "Add User"}
             </Button>
             <Button
               variant={"outline"}
