@@ -5,6 +5,7 @@ import {
   IconHelp,
   IconSearch,
   IconSettings,
+  IconTools,
   IconUsers,
 } from '@tabler/icons-react';
 
@@ -20,7 +21,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { StarsIcon } from 'lucide-react';
+import {  StarsIcon } from 'lucide-react';
 import { Link } from 'react-router';
 
 const data = {
@@ -44,6 +45,11 @@ const data = {
       title: 'Rooms',
       url: '/admin/room/list',
       icon: IconDoor,
+    },
+    {
+      title: 'Housekeepings',
+      url: '/admin/housekeeping/list',
+      icon: IconTools,
     },
   ],
   navSecondary: [

@@ -16,6 +16,11 @@ import RoomDetail from "./app/admin/room-detail.tsx";
 import RoomAdd from "./app/admin/room-add.tsx";
 import RoomEdit from "./app/admin/room-edit.tsx";
 
+import HousekeepingList from "./app/admin/housekeeping-list.tsx";
+import HousekeepingDetail from "./app/admin/housekeeping-detail.tsx";
+import HousekeepingAdd from "./app/admin/housekeeping-add.tsx";
+import HousekeepingEdit from "./app/admin/housekeeping-edit.tsx";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -49,6 +54,17 @@ const router = createBrowserRouter([
         ],
       },
       { path: "rooms", Component: RoomList },
+      {
+        path: "housekeeping",
+        children: [
+          { index: true, Component: HousekeepingList },
+          { path: "list", Component: HousekeepingList },
+          { path: "detail", Component: HousekeepingDetail },
+          { path: "add", Component: HousekeepingAdd },
+          { path: "edit", Component: HousekeepingEdit },
+        ],
+      },
+      { path: "housekeepings", Component: HousekeepingList },
     ],
   },
 ]);
