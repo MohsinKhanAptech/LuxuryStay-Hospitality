@@ -5,10 +5,16 @@ import "./index.css";
 import App from "./App.tsx";
 import AdminLayout from "./app/admin/admin-layout.tsx";
 import Dashboard from "./app/admin/dashboard.tsx";
+
 import UserList from "./app/admin/user-list.tsx";
 import UserDetail from "./app/admin/user-detail.tsx";
 import UserAdd from "./app/admin/user-add.tsx";
 import UserEdit from "./app/admin/user-edit.tsx";
+
+import RoomList from "./app/admin/room-list.tsx";
+import RoomDetail from "./app/admin/room-detail.tsx";
+import RoomAdd from "./app/admin/room-add.tsx";
+import RoomEdit from "./app/admin/room-edit.tsx";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +38,17 @@ const router = createBrowserRouter([
         ],
       },
       { path: "users", Component: UserList },
+      {
+        path: "room",
+        children: [
+          { index: true, Component: RoomList },
+          { path: "list", Component: RoomList },
+          { path: "detail", Component: RoomDetail },
+          { path: "add", Component: RoomAdd },
+          { path: "edit", Component: RoomEdit },
+        ],
+      },
+      { path: "rooms", Component: RoomList },
     ],
   },
 ]);

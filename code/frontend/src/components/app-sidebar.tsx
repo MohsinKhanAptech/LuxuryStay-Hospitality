@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {
   IconCamera,
-  IconChartBar,
   IconDashboard,
   IconDatabase,
+  IconDoor,
   IconFileAi,
   IconFileDescription,
   IconFileWord,
@@ -49,9 +49,9 @@ const data = {
       icon: IconUsers,
     },
     {
-      title: 'Projects',
-      url: '#',
-      icon: IconChartBar,
+      title: 'Rooms',
+      url: '/admin/room/list',
+      icon: IconDoor,
     },
     {
       title: 'Projects',
