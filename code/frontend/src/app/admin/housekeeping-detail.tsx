@@ -127,14 +127,14 @@ const HousekeepingDetail = () => {
     <>
       <SiteHeader title={"Housekeeping Detail"} />
       <section className="p-4 md:p-10">
-        <form onSubmit={handleSubmit} className="bg-white p-6">
-          <h2 className="text-2xl font-bold mb-6 text-gray-800">
+        <form onSubmit={handleSubmit} className="p-6 bg-white">
+          <h2 className="mb-6 text-2xl font-bold text-gray-800">
             View Housekeeping Task
           </h2>
 
           {errorMessage && (
             <div
-              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+              className="relative px-4 py-3 mb-4 text-red-700 bg-red-100 border border-red-400 rounded"
               role="alert"
             >
               <span className="block sm:inline">{errorMessage}</span>
