@@ -18,9 +18,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 const MONGO_URI =
-  process.env.MONGO_URI || 'mongodb://localhost:27017/LuxuryStarHospitality';
+  'mongodb+srv://muhammadmohsinkhanaptech:5KYCk507Xm3ZsGYk@cluster0.6nbiqrm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 
 // MongoDB connection
 mongoose
