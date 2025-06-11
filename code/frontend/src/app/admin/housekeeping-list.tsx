@@ -20,7 +20,7 @@ function HousekeepingList() {
       try {
         setLoading(true);
         setError(null);
-        const res = await axios.get("http://localhost:5000/api/housekeeping/");
+        const res = await axios.get("http://localhost:5000/api/housekeepings/");
         if (res.status !== 200)
           throw new Error("Failed to fetch housekeeping tasks");
         const parsed = z.array(housekeepingSchema).parse(res.data);

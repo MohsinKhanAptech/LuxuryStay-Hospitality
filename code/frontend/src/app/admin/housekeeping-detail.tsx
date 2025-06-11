@@ -39,7 +39,7 @@ const HousekeepingDetail = () => {
       setHousekeepingId(idToFetch);
 
       axios
-        .get(`http://localhost:5000/api/housekeeping/${idToFetch}`)
+        .get(`http://localhost:5000/api/housekeepings/${idToFetch}`)
         .then(async (res) => {
           const hk = res.data;
 
@@ -194,7 +194,7 @@ const HousekeepingDetail = () => {
               onClick={() => {
                 axios
                   .delete(
-                    `http://localhost:5000/api/housekeeping/${housekeepingId}`
+                    `http://localhost:5000/api/housekeepings/${housekeepingId}`
                   )
                   .then(() => {
                     navigate("/admin/housekeeping/list");

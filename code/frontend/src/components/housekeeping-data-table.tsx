@@ -50,7 +50,10 @@ import {
 // Housekeeping schema based on housekeepingModel.ts
 export const housekeepingSchema = z.object({
   _id: z.string(),
-  roomId: z.union([z.string(), z.object({ _id: z.string(), roomType: z.string().optional() })]),
+  roomId: z.union([
+    z.string(),
+    z.object({ _id: z.string(), roomType: z.string().optional() }),
+  ]),
   task: z.string(),
   status: z.enum(["pending", "in progress", "completed"]),
   scheduledDate: z.string(),
@@ -127,8 +130,7 @@ export function HousekeepingDataTable({
         if (typeof room === "string") return room;
         if (room && typeof room === "object" && "roomType" in room)
           return room.roomType || room._id;
-        if (room && typeof room === "object" && "_id" in room)
-          return room._id;
+        if (room && typeof room === "object" && "_id" in room) return room._id;
         return "-";
       },
     },
@@ -222,7 +224,7 @@ export function HousekeepingDataTable({
               onClick={() => {
                 axios
                   .delete(
-                    `http://localhost:5000/api/housekeeping/${row.original._id}`
+                    `http://localhost:5000/api/housekeepings/${row.original._id}`
                   )
                   .then(() => {
                     setTableData((prev) =>
@@ -264,7 +266,10 @@ export function HousekeepingDataTable({
   });
 
   return (
-    <Tabs defaultValue="housekeeping" className="w-full flex-col justify-start gap-6">
+    <Tabs
+      defaultValue="housekeeping"
+      className="w-full flex-col justify-start gap-6"
+    >
       <div className="flex items-center justify-end px-4 lg:px-6">
         <Label htmlFor="view-selector" className="sr-only">
           View

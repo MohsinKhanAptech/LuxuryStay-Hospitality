@@ -73,17 +73,21 @@ const HousekeepingEdit = () => {
       setHousekeepingId(idToFetch);
 
       axios
-        .get(`http://localhost:5000/api/housekeeping/${idToFetch}`)
+        .get(`http://localhost:5000/api/housekeepings/${idToFetch}`)
         .then((res) => {
           const hk = res.data;
           setForm({
-            roomId: typeof hk.roomId === "string" ? hk.roomId : hk.roomId?._id || "",
+            roomId:
+              typeof hk.roomId === "string" ? hk.roomId : hk.roomId?._id || "",
             task: hk.task,
             status: hk.status,
             scheduledDate: hk.scheduledDate
               ? new Date(hk.scheduledDate).toISOString().slice(0, 16)
               : "",
-            assignedTo: typeof hk.assignedTo === "string" ? hk.assignedTo : hk.assignedTo?._id || "",
+            assignedTo:
+              typeof hk.assignedTo === "string"
+                ? hk.assignedTo
+                : hk.assignedTo?._id || "",
           });
           setErrorMessage(null);
         })
@@ -97,7 +101,9 @@ const HousekeepingEdit = () => {
           setIsLoading(false);
         });
     } else {
-      setErrorMessage("No housekeeping task selected for editing. Returning to list.");
+      setErrorMessage(
+        "No housekeeping task selected for editing. Returning to list."
+      );
       setIsLoading(false);
       navigate("/admin/housekeeping/list");
     }
@@ -153,7 +159,7 @@ const HousekeepingEdit = () => {
       };
 
       await axios.put(
-        `http://localhost:5000/api/housekeeping/${housekeepingId}`,
+        `http://localhost:5000/api/housekeepings/${housekeepingId}`,
         formData
       );
 

@@ -98,7 +98,7 @@ const HousekeepingAdd = () => {
         assignedTo: form.assignedTo || undefined,
       };
 
-      await axios.post("http://localhost:5000/api/housekeeping/", formData);
+      await axios.post("http://localhost:5000/api/housekeepings/", formData);
       navigate("/admin/housekeeping/list");
     } catch (error) {
       setErrorMessage(
