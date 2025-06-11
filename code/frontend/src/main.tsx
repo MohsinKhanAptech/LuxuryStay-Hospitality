@@ -21,6 +21,11 @@ import HousekeepingDetail from "./app/admin/housekeeping-detail.tsx";
 import HousekeepingAdd from "./app/admin/housekeeping-add.tsx";
 import HousekeepingEdit from "./app/admin/housekeeping-edit.tsx";
 
+import FeedbackList from "./app/admin/feedback-list.tsx";
+import FeedbackAdd from "./app/admin/feedback-add.tsx";
+import FeedbackDetail from "./app/admin/feedback-detail.tsx";
+import FeedbackEdit from "./app/admin/feedback-edit.tsx";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -65,6 +70,17 @@ const router = createBrowserRouter([
         ],
       },
       { path: "housekeepings", Component: HousekeepingList },
+      {
+        path: "feedback",
+        children: [
+          { index: true, Component: FeedbackList },
+          { path: "list", Component: FeedbackList },
+          { path: "detail", Component: FeedbackDetail },
+          { path: "add", Component: FeedbackAdd },
+          { path: "edit", Component: FeedbackEdit },
+        ],
+      },
+      { path: "feedbacks", Component: FeedbackList },
     ],
   },
 ]);

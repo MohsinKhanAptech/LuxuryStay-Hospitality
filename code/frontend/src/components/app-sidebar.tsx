@@ -2,6 +2,7 @@ import * as React from "react";
 import {
   IconDashboard,
   IconDoor,
+  IconMessages,
   // IconHelp,
   // IconSearch,
   // IconSettings,
@@ -50,6 +51,11 @@ const data = {
       title: "Housekeepings",
       url: "/admin/housekeeping/list",
       icon: IconTools,
+    },
+    {
+      title: "Feedback",
+      url: "/admin/feedback/list",
+      icon: IconMessages,
     },
   ],
   // navSecondary: [
