@@ -6,6 +6,8 @@ import App from "./App.tsx";
 import AdminLayout from "./app/admin/admin-layout.tsx";
 import Dashboard from "./app/admin/dashboard.tsx";
 
+import Login from "./app/admin/login.tsx";
+
 import UserList from "./app/admin/user-list.tsx";
 import UserDetail from "./app/admin/user-detail.tsx";
 import UserAdd from "./app/admin/user-add.tsx";
@@ -83,6 +85,7 @@ const router = createBrowserRouter([
       { path: "feedbacks", Component: FeedbackList },
     ],
   },
+  { path: "/admin/login", Component: Login },
 ]);
 
 createRoot(document.getElementById("root")!).render(
