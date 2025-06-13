@@ -28,6 +28,14 @@ import FeedbackAdd from "./app/admin/feedback-add.tsx";
 import FeedbackDetail from "./app/admin/feedback-detail.tsx";
 import FeedbackEdit from "./app/admin/feedback-edit.tsx";
 
+function requireAdminAuth({ children }: { children: React.ReactNode }) {
+  if (!localStorage.getItem("admin-auth")) {
+    window.location.href = "/admin/login";
+    return null;
+  }
+  return children;
+}
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -35,7 +43,8 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin",
-    Component: AdminLayout,
+    Component: (props) =>
+      requireAdminAuth({ children: <AdminLayout {...props} /> }),
     children: [
       { index: true, Component: Dashboard },
       { path: "dashboard", Component: Dashboard },
