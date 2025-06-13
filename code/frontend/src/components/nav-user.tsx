@@ -89,7 +89,12 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                localStorage.removeItem("admin-auth");
+                window.location.href = "/admin/login";
+              }}
+            >
               <IconLogout />
               Log out
             </DropdownMenuItem>
